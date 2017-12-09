@@ -18,14 +18,14 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+//app.use('/', index);
+//app.use('/users', users);
 
-// catch 404 and forward to error handler
+/*// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
@@ -41,6 +41,45 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});*/
+
+var campgrounds = [
+    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
+    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
+    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"}
+];
+
+app.get("/",function (req, res) {
+    res.render("landing")
+});
+
+
+app.get("/campgrounds",function (req, res) {
+    res.render("campgrounds",{campgrounds: campgrounds})
+});
+
+app.get("/campgrounds/new",function (req,res) {
+    //TODO:
+    res.render("addcampground")
+});
+
+app.post("/campgrounds",function (req,res) {
+    //TODO:
+    var name = req.body.campgroundName;
+    var image = req.body.campgroundImage;
+
+    campgrounds.push({name: name,image: image });
+    res.redirect("/campgrounds");
+
+});
+
+//For invalid routes
+app.get("*",function (req,res) {
+    res.send("Invalid Route");
+});
+
+app.listen("8080","localhost",function () {
+    console.log("YelpCamp Started");
 });
 
 module.exports = app;
