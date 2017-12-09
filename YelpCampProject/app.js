@@ -46,21 +46,27 @@ app.use(function(err, req, res, next) {
 var campgrounds = [
     {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
     {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
+    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"},
+    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
+    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
+    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"},
+    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
+    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
     {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"}
 ];
 
 app.get("/",function (req, res) {
-    res.render("landing")
+    res.render("landing");
 });
 
 
 app.get("/campgrounds",function (req, res) {
-    res.render("campgrounds",{campgrounds: campgrounds})
+    res.render("campgrounds",{campgrounds: campgrounds});
 });
 
 app.get("/campgrounds/new",function (req,res) {
     //TODO:
-    res.render("addcampground")
+    res.render("newcampground");
 });
 
 app.post("/campgrounds",function (req,res) {
