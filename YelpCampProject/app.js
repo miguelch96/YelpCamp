@@ -30,10 +30,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 var Campground = mongoose.model("Campground",campgroundSchema)
+
 
 
 app.get("/",function (req, res) {
@@ -48,7 +50,7 @@ app.get("/campgrounds",function (req, res) {
         if(err){
             console.log(err);
         } else{
-            res.render("campgrounds",{campgrounds: campgrounds});
+            res.render("index",{campgrounds: campgrounds});
         }
     });
 });
@@ -56,7 +58,7 @@ app.get("/campgrounds",function (req, res) {
 //NEW - SHOW FORM TO CREATE NEW CAMPGROUND
 app.get("/campgrounds/new",function (req,res) {
     //TODO:
-    res.render("newcampground");
+    res.render("new");
 });
 
 //CREATE -ADD NEW CAMPGROUND TO DB
@@ -64,10 +66,12 @@ app.post("/campgrounds",function (req,res) {
     //TODO:
     var name = req.body.campgroundName;
     var image = req.body.campgroundImage;
+    var description = req.body.campgroundDescription;
 
     Campground.create({
             name: name,
-            image: image
+            image: image,
+            description: description
         }, function (err,campground) {
             if(err){
                 console.log(err)
@@ -80,7 +84,38 @@ app.post("/campgrounds",function (req,res) {
     );
 });
 
-//For invalid routes
+//SHOW - SHOW CAMPGROUND INFO
+app.get("/campgrounds/:id",function (req,res) {
+
+    //find the campground wwith provided ID
+    Campground.findById(req.params.id, function (err, foundCampground){
+        if(err){
+            console.log(error);
+        } else {
+            //render show template with that campground
+            res.render("show",{campground: foundCampground});
+        }
+    });
+});
+
+app.get("/campgrounds/:id/edit",function (req,res) {
+    res.render("edit")
+});
+
+app.put("/campgrounds/:id",function(req,res){
+    res.redirect("/campgrounds")
+});
+
+app.destroy("/campgrounds/:id",function (req, res) {
+    res.redirect("/campgrounds")
+});
+
+
+
+
+
+
+//FOR INVALID ROUTES
 app.get("*",function (req,res) {
     res.send("Invalid Route");
 });
