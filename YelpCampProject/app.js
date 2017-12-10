@@ -4,9 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require("mongoose");
 
-var index = require('./routes/index');
-var users = require('./routes/users');
+mongoose.Promise = global.Promise;
+
+mongoose.connect("mongodb://localhost/yelpcampDB",{
+    useMongoClient: true
+});
+
 
 var app = express();
 
@@ -22,61 +27,57 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', index);
-//app.use('/users', users);
 
-/*// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+var campgroundSchema = new mongoose.Schema({
+    name: String,
+    image: String
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+var Campground = mongoose.model("Campground",campgroundSchema)
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});*/
-
-var campgrounds = [
-    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
-    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
-    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"},
-    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
-    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
-    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"},
-    {name: "Titicaca", image: "https://www.peru.travel/Portals/_default/que-hacer/naturaleza/lago-titicaca/img_one_lago_titicaca_pp_ra.jpg"},
-    {name: "Pampas Galeras", image: "https://img.elcomercio.pe/files/ec_article_multimedia_gallery/uploads/2017/09/06/59b05c30543ad.jpeg"},
-    {name: "Machu Picchu", image: "https://lonelyplanetimages.imgix.net/mastheads/16641625.jpg?sharp=10&vib=20&w=1200"}
-];
 
 app.get("/",function (req, res) {
     res.render("landing");
 });
 
-
+//INDEX - SHOW ALL CAMPGROUNDS
 app.get("/campgrounds",function (req, res) {
-    res.render("campgrounds",{campgrounds: campgrounds});
+
+    //Get all campgrounds from DB
+    Campground.find({}, function (err, campgrounds) {
+        if(err){
+            console.log(err);
+        } else{
+            res.render("campgrounds",{campgrounds: campgrounds});
+        }
+    });
 });
 
+//NEW - SHOW FORM TO CREATE NEW CAMPGROUND
 app.get("/campgrounds/new",function (req,res) {
     //TODO:
     res.render("newcampground");
 });
 
+//CREATE -ADD NEW CAMPGROUND TO DB
 app.post("/campgrounds",function (req,res) {
     //TODO:
     var name = req.body.campgroundName;
     var image = req.body.campgroundImage;
 
-    campgrounds.push({name: name,image: image });
-    res.redirect("/campgrounds");
-
+    Campground.create({
+            name: name,
+            image: image
+        }, function (err,campground) {
+            if(err){
+                console.log(err)
+            } else {
+                console.log("NEWLY CREATED CAMPGROUND");
+                console.log(campground);
+                res.redirect("/campgrounds");
+            }
+        }
+    );
 });
 
 //For invalid routes
