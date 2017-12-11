@@ -6,6 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require("mongoose");
 
+var Campground = require("./models/campground");
+var User = require("./models/campground");
+var Comment = require("./models/campground");
+var seedDB = require("./seed");
+
+seedDB();
+
 mongoose.Promise = global.Promise;
 
 mongoose.connect("mongodb://localhost/yelpcampDB",{
@@ -28,21 +35,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-var campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
-
-var Campground = mongoose.model("Campground",campgroundSchema)
-
 
 
 app.get("/",function (req, res) {
     res.render("landing");
 });
 
-//INDEX - SHOW ALL CAMPGROUNDS
 app.get("/campgrounds",function (req, res) {
 
     //Get all campgrounds from DB
@@ -86,7 +84,6 @@ app.post("/campgrounds",function (req,res) {
 
 //SHOW - SHOW CAMPGROUND INFO
 app.get("/campgrounds/:id",function (req,res) {
-
     //find the campground wwith provided ID
     Campground.findById(req.params.id, function (err, foundCampground){
         if(err){
@@ -102,11 +99,15 @@ app.get("/campgrounds/:id/edit",function (req,res) {
     res.render("edit")
 });
 
-app.put("/campgrounds/:id",function(req,res){
-    res.redirect("/campgrounds")
-});
+app.put("/campgrounds/:id", function (req, res) {
+    Campground.put()
+})
 
-app.destroy("/campgrounds/:id",function (req, res) {
+
+app.delete("/campgrounds/:id",function (req, res) {
+    Campground.findByIdAndRemove(req.params._id,function (err, res) {
+
+    });
     res.redirect("/campgrounds")
 });
 
