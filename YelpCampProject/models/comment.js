@@ -1,9 +1,8 @@
 var mongoose = require("mongoose");
 
 var campgroundSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
-});
+    text: String,
+    author: String
+},{usePushEach: true});
 
-module.exports = mongoose.model("Campground",campgroundSchema)
+module.exports = mongoose.model("Comment",campgroundSchema)
