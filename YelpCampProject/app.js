@@ -6,6 +6,7 @@ var Comment = require("./models/comment");
 var seedDB = require("./seed");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
+var methodOverride = require("method-override");
 var User = require("./models/user");
 
 var app = express();
@@ -18,7 +19,7 @@ var commentRoutes = require("./routes/comments"),
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect("mongodb://localhost/yelpcampDB_2",{
+mongoose.connect("mongodb://localhost/yelpcampDB",{
     useMongoClient: true
 });
 
@@ -26,8 +27,9 @@ mongoose.connect("mongodb://localhost/yelpcampDB_2",{
 // view engine setup
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + 'public'));
-seedDB();
+app.use(express.static(__dirname + '/public'));
+app.use(methodOverride("_method"));
+//seedDB();
 
 // PASSPORT CONFIGURATION
 
@@ -49,7 +51,7 @@ app.use(function (req, res, next) {
 });
 
 app.use("/",indexRoutes);
-app.use(campgroundRoutes);
+app.use("/campgrounds",campgroundRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
 
 

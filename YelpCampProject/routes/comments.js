@@ -10,7 +10,7 @@ var Comment = require("../models/comment");
 router.get("/new",isLoggedIn,function (req, res) {
     Campground.findById(req.params.id, function (err, foundCampground) {
         if(err)
-            console.log(err)
+            console.log(err);
         else
             res.render("comments/new",{campground: foundCampground})
     });
@@ -27,14 +27,21 @@ router.post("/",isLoggedIn,function (req,res) {
                 if(err)
                     console.log(err);
                 else{
+                    newComment.author.id = req.user._id;
+                    newComment.author.username=req.user.username;
+                    newComment.save();
                     foundCampground.comments.push(newComment);
                     foundCampground.save();
-                    console.log("NEWLY CREATED COMMENT");
+                    console.log(newComment);
                     res.redirect("/campgrounds/"+foundCampground._id)
                 }
             })
         }
     })
+});
+
+router.get("/:comment_id/edit",function (req, res) {
+   res.send("EDIT ROUTE FOR COMMENT!");
 });
 
 function isLoggedIn(req,res,next) {
