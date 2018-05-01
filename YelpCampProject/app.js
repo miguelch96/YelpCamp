@@ -19,7 +19,7 @@ var commentRoutes = require("./routes/comments"),
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect("mongodb://localhost/yelpcampDB",{
+mongoose.connect("mongodb://mongo:27017/yelpcampDB",{
     useMongoClient: true
 });
 
@@ -55,7 +55,7 @@ app.use("/campgrounds",campgroundRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
 
 
-app.listen("8080","localhost",function () {
+app.listen("4444",function () {
     console.log("YelpCamp Started");
 });
 
