@@ -1,0 +1,68 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  ports:
+  - port: 27017
+  selector:
+    app: mongo
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: yelpcamp-docker
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: yelpcamp-docker
+    spec:
+      containers:
+      - name: yelpcamp-docker
+        image: 3devcontainerregistry.azurecr.io/yelpcamp-docker
+        ports:
+        - containerPort: 4444
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: REDIS
+          value: "mongo"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yelpcamp-docker
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 4444
+  selector:
+    app: yelpcamp-docker
