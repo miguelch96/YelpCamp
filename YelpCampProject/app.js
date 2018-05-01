@@ -55,7 +55,7 @@ app.use("/campgrounds",campgroundRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
 
 
-app.listen("4444",function () {
+app.listen("80",function () {
     console.log("YelpCamp Started");
 });
 

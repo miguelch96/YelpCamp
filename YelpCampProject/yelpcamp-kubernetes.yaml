@@ -46,14 +46,14 @@ spec:
       - name: yelpcamp-docker
         image: 3devcontainerregistry.azurecr.io/yelpcamp-docker
         ports:
-        - containerPort: 4444
+        - containerPort: 80
         resources:
           requests:
             cpu: 250m
           limits:
             cpu: 500m
         env:
-        - name: REDIS
+        - name: MONGO
           value: "mongo"
 ---
 apiVersion: v1
@@ -63,6 +63,6 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 4444
+  - port: 80
   selector:
     app: yelpcamp-docker
