@@ -1,7 +1,7 @@
 version: "2"
 services:
   web:
-    image: yelpcamp-docker
+    image: yelpcamp-docker:${TAG:-latest}
     build: .
     ports:
       - "8080:80"

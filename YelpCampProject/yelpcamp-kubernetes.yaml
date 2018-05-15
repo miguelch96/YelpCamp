@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: yelpcamp-docker
-        image: 3devcontainerregistry.azurecr.io/yelpcamp-docker
+        image: 3devcontainerregistry.azurecr.io/yelpcamp-docker:latest
         ports:
         - containerPort: 80
         resources:
